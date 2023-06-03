@@ -8,16 +8,13 @@
 #include <thread>
 #include "content_manager.hpp"
 #include "screen.hpp"
+#include "logger.hpp"
 
 class Game {
   private:
     sf::Clock m_Clock;
     bool m_is_running;
     std::unique_ptr<sf::RenderWindow> m_Window;
-
-    // Content Managers
-    ContentManager<sf::Texture> m_TexManager;
-    ContentManager<sf::Font> m_FontManager;
 
     TestScreen m_Screen;
 

@@ -2,6 +2,7 @@
 #define SFML_PROJECT_SCREEN_HPP
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "ui_controls.hpp"
 
 class Screen {
@@ -12,24 +13,23 @@ class Screen {
 
 class TestScreen {
     protected:
-    Label start, options, exit;
-    sf::Font m_Font;
+    std::vector<Label> m_Labels;
 
     public:
     TestScreen() {
 
     }
-    TestScreen(std::string font_name, int width, int height) {
-        m_Font = *ResourceManager::GetFont(font_name);
-        start = Label(m_Font, "Start game", width / 2.0, height / 2.0 - 24);
-        options = Label(m_Font, "Options", width / 2.0, height / 2.0);
-        exit = Label(m_Font, "Exit", width / 2.0, height / 2.0 + 24);
+    TestScreen(const sf::Font *font, int width, int height) {
+        m_Labels.resize(3);
+        m_Labels[0] = Label(font, "Start game", width / 2.0, height / 2.0 - 24);
+        m_Labels[1] = Label(font, "Options", width / 2.0, height / 2.0);
+        m_Labels[2] = Label(font, "Exit", width / 2.0, height / 2.0 + 24);
     }
 
     void Render(sf::RenderWindow *window) {
-        start.Render(window);
-        options.Render(window);
-        exit.Render(window);
+        for (auto &label : m_Labels) {
+            label.Render(window);
+        }
     }
 };
 

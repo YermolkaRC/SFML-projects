@@ -1,27 +1,22 @@
 #include "game.hpp"
 
 void Game::Init() {
+    Logger::Debug_log("Begun Game::Init()");
     m_Clock = sf::Clock();
     m_Frames = 0;
+
+    Logger::Debug_log("Creating window...");
     m_Window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Game!");
     m_Window.get()->setFramerateLimit(75);
+    Logger::Debug_log("Done.");
 
-    m_TexManager.Init("content");
-    m_FontManager.Init("content/fonts");
+    Logger::Debug_log("Initializing content managers...");
+    ResourceManager::Init("content");
+    ResourceManager::LoadFont("arial.ttf");
+    ResourceManager::LoadTexture("dog.jpg", "dog");
+    Logger::Debug_log("Done.");
 
-    if (!m_TexManager.LoadContent("dog.jpg", "dog")) {
-        std::cout << "Error loading texture\n";
-    }
-    if (!m_FontManager.LoadContent("Skullcrusher.ttf", "123")) {
-        std::cout << "Error loading font\n";
-    }
-
-    sf::Font font;
-    font.loadFromFile("content/fonts/Skullcrusher.ttf");
-
-    ResourceManager::Init("content/fonts");
-    ResourceManager::LoadFont("arial.ttf", "123");
-    m_Screen = TestScreen("123", m_Window->getSize().x, m_Window->getSize().y);
+    m_Screen = TestScreen(ResourceManager::GetSkullFont(), m_Window->getSize().x, m_Window->getSize().y);
 }
 
 void Game::Update(sf::Time elapsed) {
@@ -39,7 +34,7 @@ void Game::Update(sf::Time elapsed) {
 void Game::Render(sf::Time elapsed) {
     m_Window->clear();
     sf::Sprite sprite;
-    sprite.setTexture(*m_TexManager.GetContentPtr("dog"));
+    sprite.setTexture(*ResourceManager::GetTexture("dog"));
     m_Window->draw(sprite);
 
     m_Screen.Render(m_Window.get());
@@ -47,6 +42,7 @@ void Game::Render(sf::Time elapsed) {
 }
 
 Game::Game() {
+    Logger::Init();
 }
 
 void Game::Run(){
